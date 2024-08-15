@@ -1,0 +1,110 @@
+{% extends "sellspage/layout.html" %} 
+{% load static %}   
+
+
+{% block title %}Profile{% endblock title %}
+
+{% block extra_head %}
+<!-- You can add additional head elements specific to this page here -->
+{% endblock extra_head%} 
+
+{% block main %}
+<div id="main" class="main" page="profile">
+  <div class="profileData">
+    <img
+      class="shadow cover"
+      src="{% static 'sellspage/images/cover.png' %}"
+      alt="cover photo"
+      width="100%"
+    />
+    <div class="infos">
+      <img
+        class="profile shadow"
+        src="{% static 'sellspage/images/profile.png' %}"
+        alt="profile"
+      />
+      <div class="infos">
+        <div class="name">{{ user.full_name }}</div>
+
+        <div class="title">{{ user.title }}</div>
+        <hr />
+        <div class="phone">{{ user.phone }}</div>
+        <div class="location">{{ user.location }}</div>
+        <hr />
+        <div class="bio">{{ user.bio }}</div>
+      </div>
+      <hr />
+    </div>
+    <hr />
+    <div class="contracts">
+      <a
+        href="https://wa.me/{{ user.profile.whatsapp }}"
+        data-iconof="Whatsapp"
+        class="whatsapp icon"
+        target="_blank"
+        ><span class="name" data-iconof="Whatsapp"></span
+      ></a>
+      <a
+        href="{{ user.profile.imo_link }}"
+        data-iconof="Imo"
+        class="imo icon whatsapp"
+        target="_blank"
+        ><span class="name" data-iconof="Imo"></span
+      ></a>
+      <a
+        href="https://m.me/{{ user.profile.messenger }}"
+        data-iconof="Messenger"
+        class="messenger icon message"
+        target="_blank"
+        ><span class="name" data-iconof="Messenger"></span
+      ></a>
+      <a
+        href="https://facebook.com/{{ user.profile.facebook }}"
+        data-iconof="Facebook"
+        class="facebook icon"
+        target="_blank"
+        ><span class="name" data-iconof="Facebook"></span
+      ></a>
+      <a
+        href="tel:{{ user.profile.phone }}"
+        data-iconof="Phone"
+        class="phone icon"
+        target="_blank"
+        ><span class="name" data-iconof="Phone"></span
+      ></a>
+      <a
+        href="mailto:{{ user.profile.email }}"
+        data-iconof="Email"
+        class="email icon"
+        target="_blank"
+        ><span class="name" data-iconof="Email"></span
+      ></a>
+    </div>
+    <hr />
+  </div>
+
+  <div class="products">
+    <h2 class="heading">Products</h2>
+    {% for product in user.profile.products.all %}
+    <div
+      class="product"
+      data-product-id="{{ product.id }}"
+      href="{% url 'sellspage:product_detail' product.id %}"
+    >
+      <img
+        class="product-image"
+        src="{{ product.image.url }}"
+        alt="{{ product.title }} product image"
+      />
+      <div class="p-infos">
+        <div class="title">{{ product.title }}</div>
+        <div class="price">${{ product.price }}</div>
+        <div class="broghtby">{{ product.bought_by_count }} people</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endblock main %} {% block extra_script %}
+  <!-- You can add additional scripts specific to this page here -->
+  {% endblock %}
+</div>

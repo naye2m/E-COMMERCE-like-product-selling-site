@@ -1,0 +1,110 @@
+{% extends 'sellspage/layout.html' %}
+
+{% block title %}Product {{ product.title }}{% endblock %}
+
+{% block extra_head %}
+<!-- Add any specific head elements for this page if needed -->
+{% endblock %}
+
+{% block main %}
+<div class="product-page">
+    <img class="product-image" src="{% static 'sellspage/images/product.png' %}" alt="{{ product.title }} product image">
+    
+    <div class="product-details">
+        <h1 class="product-title">{{ product.title }}</h1>
+        <div class="availability {% if product.is_available %}available{% else %}unavailable{% endif %}">
+            {% if product.is_available %}
+                Available
+            {% else %}
+                Sold Out
+            {% endif %}
+        </div>
+        <div class="posted-on">Posted On: {{ product.posted_on|date:"F j, Y" }}</div>
+        
+        {% if product.is_available %}
+        <div class="stock">Only {{ product.stock }} left in stock</div>
+        {% endif %}
+        
+        <div class="description">
+            <h2>Description</h2>
+            <p>{{ product.description }}</p>
+        </div>
+        <div class="price">
+            <span class="bold">Price: </span>${{ product.price }}
+        </div>
+        <div class="wishlisted-by">
+            <span class="bold">Wishlisted by: </span>{{ product.wishlist_count }} people
+        </div>
+        <div class="sold-to">
+            <span class="bold">Sold to: </span>{{ product.sold_count }} people
+        </div>
+        
+        <div class="actions">
+            {% if user.is_authenticated %}
+            <form action="{% url 'sellspage:add_to_cart' product.id %}" method="post" class="add-to-cart-form">
+                {% csrf_token %}
+                <button type="submit" class="btn">Add to Cart</button>
+            </form>
+            <form action="{% url 'sellspage:place_order' product.id %}" method="post" class="order-form">
+                {% csrf_token %}
+                <button type="submit" class="btn">Order Now</button>
+            </form>
+            {% else %}
+            <p>Please <a href="{% url 'sellspage:login' %}">log in</a> to purchase this product.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="product-gallery">
+        <h2>Product Images</h2>
+        <div class="images">
+            {% for image in product.images.all %}
+            <img src="{{ image.url }}" alt="{{ product.title }} image">
+            {% empty %}
+            <p>No additional images available.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="comments">
+        <h2>Comments</h2>
+        <form action="{% url 'sellspage:add_comment' product.id %}" method="post" class="comment-form">
+            {% csrf_token %}
+            <input type="text" name="comment" placeholder="Add a comment" required>
+            <button type="submit" class="btn">Submit</button>
+        </form>
+        <ul class="comment-list">
+            {% for comment in product.comments.all %}
+            <li>
+                <strong>{{ comment.user.username }}:</strong> {{ comment.text }}
+            </li>
+            {% empty %}
+            <li>No comments yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="related-products">
+        <h2>Related Products</h2>
+        <div class="product-list">
+            {% for related_product in related_products %}
+            <div class="product" data-product-id="{{ related_product.id }}">
+                <a href="{% url 'sellspage:product_detail' related_product.id %}">
+                    <img src="{% static 'sellspage/images/product.png' %}" alt="{{ related_product.title }}">
+                    <div class="p-info">
+                        <div class="title">{{ related_product.title }}</div>
+                        <div class="price">${{ related_product.price }}</div>
+                        <div class="bought-by">{{ related_product.bought_by_count }} people</div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <p>No related products available.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_script %}
+<!-- Add any specific scripts for this page if needed -->
+{% endblock %}

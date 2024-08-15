@@ -1,0 +1,90 @@
+{% extends 'sellspage/layout.html' %}
+
+{% block title %}
+    Registration
+{% endblock title %}
+
+{% block main %}
+<div class="container">
+    <h2>Register</h2>
+    <form method="post" action="{% url 'sellspage:register' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="{{ form.username.value }}" required>
+            {% if form.username.errors %}
+                <div class="error">{{ form.username.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" value="{{ form.first_name.value }}">
+            {% if form.first_name.errors %}
+                <div class="error">{{ form.first_name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" value="{{ form.last_name.value }}">
+            {% if form.last_name.errors %}
+                <div class="error">{{ form.last_name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ form.email.value }}">
+            {% if form.email.errors %}
+                <div class="error">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="date_of_birth">Date of Birth:</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" value="{{ form.date_of_birth.value }}">
+            {% if form.date_of_birth.errors %}
+                <div class="error">{{ form.date_of_birth.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="password1">Password:</label>
+            <input type="password" id="password1" name="password1" required>
+            {% if form.password1.errors %}
+                <div class="error">{{ form.password1.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="password2">Confirm Password:</label>
+            <input type="password" id="password2" name="password2" required>
+            {% if form.password2.errors %}
+                <div class="error">{{ form.password2.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="is_seller">Register as a Seller:</label>
+            <input type="checkbox" id="is_seller" name="is_seller" {% if form.is_seller.value %}checked{% endif %}>
+            {% if form.is_seller.errors %}
+                <div class="error">{{ form.is_seller.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="is_customer">Register as a Customer:</label>
+            <input type="checkbox" id="is_customer" name="is_customer" {% if form.is_customer.value %}checked{% endif %}>
+            {% if form.is_customer.errors %}
+                <div class="error">{{ form.is_customer.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+    </form>
+</div>
+{% endblock main %}

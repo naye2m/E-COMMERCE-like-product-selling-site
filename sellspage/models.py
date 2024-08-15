@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.core.paginator import Paginator, Page
+from django.contrib.auth.models import AbstractUser,User
+from django.core.paginator import Paginator
 from django.urls import reverse
 from PIL import Image
 import requests
@@ -13,34 +13,32 @@ class PhotoModel(models.Model):
     drive_photo_id = models.CharField(max_length=256, blank=True, null=True)
 
     def as_image_object(self) -> Image:
-        # Implementation to return the image object
+        # Placeholder for implementation to return the image object
         pass
 
     @classmethod
     def upload_photo(cls, photo) -> "PhotoModel":
         # Upload photo to Google Drive and save the drive ID
-        url = "script.google" # todo correct this
-        json_data = JSON.dumps({"hi": "hi"})
+        url = "your_google_script_url_here"  # Replace with your actual Google Apps Script URL
+        json_data = JSON.dumps({"photo_data": photo.read()})
         response = requests.post(url, data=json_data)
-        data = response.json() if response.ok else {"error": "couldn't connect"}
+        data = response.json() if response.ok else {"error": "Couldn't connect"}
         file_id = data.get("fileID")
         
         if file_id:
-            photo_model = cls(drive_photo_id=file_id) # todo correct this check of drive file id
+            photo_model = cls(drive_photo_id=file_id)
             photo_model.save()
             return photo_model
         else:
-            raise ValueError("Invalid Drive ID")
+            raise ValueError("Invalid Drive ID or Upload Failed")
 
-class User(AbstractUser):
-    first_name = models.CharField(max_length=50, blank=True, null=True)
-    last_name = models.CharField(max_length=50, blank=True, null=True)
-    is_seller = models.BooleanField(blank=True, null=True)
-    is_customer = models.BooleanField(blank=True, null=True)
+class SellsPageUser(User):
+    is_seller = models.BooleanField(default=False)
+    is_customer = models.BooleanField(default=False)
     date_of_birth = models.DateField(blank=True, null=True)
-    contracts = models.OneToOneField("sellspage.Contracts", on_delete=models.CASCADE)
+    contracts = models.OneToOneField("Contracts", on_delete=models.CASCADE, blank=True, null=True)
     promocode = models.CharField(max_length=20, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
+    
 
     @property
     def full_name(self):
@@ -51,7 +49,7 @@ class User(AbstractUser):
         return getFromPromoCode(self.promocode)
 
     def get_page(self, page_no: int = 1) -> dict:
-        posts = self.listed_products.all().order_by("-id") # fix n+1 problem
+        posts = self.listed_products.all().order_by("-id")
         paginator = Paginator(posts, 10)
         page = paginator.get_page(page_no)
 
@@ -60,7 +58,7 @@ class User(AbstractUser):
             "posts": [
                 {
                     **post.serialize(),
-                    "postedByCU": post.user == self,
+                    "postedByCU": post.listed_by == self,
                     "likesCU": post.likes.filter(liked_by=self).exists(),
                 }
                 for post in page.object_list
@@ -86,7 +84,7 @@ class Contracts(models.Model):
     messenger_link = models.URLField(_("Messenger Link"), max_length=200, blank=True, null=True)
 
 class Promo(models.Model):
-    holder = models.ForeignKey(User, related_name="my_promos", on_delete=models.CASCADE)
+    holder = models.ForeignKey(SellsPageUser, related_name="my_promos", on_delete=models.CASCADE)
     promo_code = models.CharField(max_length=20, unique=True)
     interest_share_percent = models.PositiveSmallIntegerField()
 
@@ -101,14 +99,14 @@ class Location(models.Model):
     location_str = models.CharField(max_length=200)
 
 class ListingProduct(models.Model):
-    title = models.CharField(max_length=50, blank=True, null=True)
+    title = models.CharField(max_length=50)
     main_image = models.ForeignKey(PhotoModel, verbose_name=_("Product Photo"), on_delete=models.CASCADE)
-    price = models.FloatField(blank=True, null=True)
-    listed_by = models.ForeignKey(User, related_name="listed_products", on_delete=models.CASCADE)
+    price = models.FloatField()
+    listed_by = models.ForeignKey(SellsPageUser, related_name="listed_products", on_delete=models.CASCADE)
     date_time = models.DateTimeField(auto_now_add=True)
-    is_available = models.BooleanField(default=False)
-    description = models.CharField(max_length=750, blank=True, null=True)
-    long_description = models.CharField(max_length=1500, blank=True, null=True)
+    is_available = models.BooleanField(default=True)
+    description = models.TextField(max_length=750, blank=True, null=True)
+    long_description = models.TextField(max_length=1500, blank=True, null=True)
     product_type = models.CharField(max_length=20, choices=choiceListGen(productTypes), default=productTypes[0])
 
     class Meta:
@@ -128,18 +126,20 @@ class KeyFeatureOfProduct(models.Model):
     product = models.ForeignKey(ListingProduct, related_name="key_features", on_delete=models.CASCADE)
 
 class DescriptionPhoto(models.Model):
-    product = models.ForeignKey(Product, related_name="description_photos", on_delete=models.CASCADE)
+    product = models.ForeignKey(ListingProduct, related_name="description_photos", on_delete=models.CASCADE)
     photo = models.ForeignKey(PhotoModel, verbose_name=_("Description Photo"), on_delete=models.CASCADE)
 
 class Order(models.Model):
-    product = models.ForeignKey(Product, related_name="orders", on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name="orders", on_delete=models.CASCADE)
+    product = models.ForeignKey(ListingProduct, related_name="orders", on_delete=models.CASCADE)
+    user = models.ForeignKey(SellsPageUser, related_name="orders", on_delete=models.CASCADE)
+    order_date = models.DateTimeField(auto_now_add=True)
 
 class Comment(models.Model):
-    product = models.ForeignKey(Product, related_name="comments", on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name="comments", on_delete=models.CASCADE)
+    product = models.ForeignKey(ListingProduct, related_name="comments", on_delete=models.CASCADE)
+    user = models.ForeignKey(SellsPageUser, related_name="comments", on_delete=models.CASCADE)
     comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class Wishlist(models.Model):
-    user = models.ForeignKey(User, related_name="wishlists", on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, related_name="wishlists", on_delete=models.CASCADE)
+    user = models.ForeignKey(SellsPageUser, related_name="wishlists", on_delete=models.CASCADE)
+    product = models.ForeignKey(ListingProduct, related_name="wishlists", on_delete=models.CASCADE)

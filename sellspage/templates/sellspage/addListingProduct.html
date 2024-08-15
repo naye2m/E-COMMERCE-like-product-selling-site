@@ -1,0 +1,54 @@
+{% extends "sellspage/layout.html" %}
+
+{% block title %}Add New Product{% endblock title %}
+
+{% block main %}
+<div id="main" class="main" page="add-listing-product">
+
+    <h2>Add a New Product</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">Product Title</label>
+            <input type="text" id="title" name="title" value="{{ form.title.value }}" required>
+            <div class="error">{{ form.title.errors }}</div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Product Description</label>
+            <textarea id="description" name="description" required>{{ form.description.value }}</textarea>
+            <div class="error">{{ form.description.errors }}</div>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price (USD)</label>
+            <input type="number" id="price" name="price" step="0.01" value="{{ form.price.value }}" required>
+            <div class="error">{{ form.price.errors }}</div>
+        </div>
+
+        <div class="form-group">
+            <label for="image">Product Image</label>
+            <input type="file" id="image" name="image" required>
+            <div class="error">{{ form.image.errors }}</div>
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+                {% for category in form.category.field.queryset %}
+                <option value="{{ category.id }}" {% if category.id == form.category.value %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+            <div class="error">{{ form.category.errors }}</div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn">Add Product</button>
+        </div>
+    </form>
+
+</div>
+{% endblock main %}

@@ -1,0 +1,8 @@
+.vscode
+__pycache__
+migrations
+sellspage\templates\temp
+help.txt
+installedPIPmodules.txt
+*.sqlite3
+staticfiles
