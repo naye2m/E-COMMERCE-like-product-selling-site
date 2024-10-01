@@ -1,5 +1,3 @@
-Here’s a refined version of the project description:
-
 ### **E-Commerce Product Selling Website**
 - **Technologies**: Django, JavaScript (ES6)
 - **GitHub Repository**: [GitHub Repo](https://github.com/naye2m/E-COMMERCE-like-product-selling-site/)
