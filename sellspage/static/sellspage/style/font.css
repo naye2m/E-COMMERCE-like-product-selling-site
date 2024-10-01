@@ -45,12 +45,12 @@ body {
 @font-face {
     font-family: sutonnyOMJ;
     src: url("./../fonts/SUTONNYOMJ.TTF") format('truetype');
-    /* todo: font unicode vals */
+    /* todo :: font unicode vals */
 }
 @font-face {
     font-family: NikoshBANDigit;
     src: url("./../fonts/NikoshBAN.ttf") format('truetype');
-    /* todo: font unicode vals */
+    /* todo :: font unicode vals */
 }
 
 @font-face {
@@ -61,5 +61,5 @@ body {
     src:
         /* url("./../fonts/icomoon.ttf?1oniuf") format('truetype'), */
         url('./../fonts/icomoon.svg?1oniuf#icomoon') format('svg');
-    /* todo: font unicode vals */
+    /* todo :: font unicode vals */
 }

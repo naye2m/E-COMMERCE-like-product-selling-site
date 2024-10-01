@@ -1,0 +1,28 @@
+{% extends "sellspage/layout.html" %}
+
+{% block main %}
+<div class="wishlist-container">
+    <h2>Your Wishlist</h2>
+    {% if wishlist %}
+        <ul class="wishlist-list">
+            {% for item in wishlist %}
+                <li>
+                    <div class="wishlist-item">
+                        <img src="{{ item.product.main_image.get_url }}" alt="{{ item.product.title }}">
+                        <div class="wishlist-details">
+                            <p><a href="{% url 'listing_detail' item.product.id %}">{{ item.product.title }}</a></p>
+                            <p>Price: ${{ item.product.price }}</p>
+                            <form method="POST" action="{% url 'remove_from_wishlist' item.product.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-remove">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Your wishlist is empty.</p>
+    {% endif %}
+</div>
+{% endblock %}

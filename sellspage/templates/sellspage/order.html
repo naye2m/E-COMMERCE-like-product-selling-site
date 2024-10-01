@@ -1,0 +1,23 @@
+{% extends "sellspage/layout.html" %}
+
+{% block main %}
+<div class="order-container">
+    <h2>Your Orders</h2>
+    {% if orders %}
+        <ul class="order-list">
+            {% for order in orders %}
+                <li>
+                    <div class="order-item">
+                        <p>Order ID: {{ order.id }}</p>
+                        <p>Product: <a href="{% url 'listing_detail' order.product.id %}">{{ order.product.title }}</a></p>
+                        <p>Price: ${{ order.product.price }}</p>
+                        <p>Date: {{ order.date_time }}</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no current orders.</p>
+    {% endif %}
+</div>
+{% endblock %}

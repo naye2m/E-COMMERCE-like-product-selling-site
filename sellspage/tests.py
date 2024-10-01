@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from .models import SellsPageUser, ListingProduct, PhotoModel, Contracts, Promo, Location, KeyFeatureOfProduct, DescriptionPhoto, Order, Comment, Wishlist
+from .models import SellsPageUser, Product, PhotoModel, Contracts, Promo, Location, KeyFeatureOfProduct, DescriptionPhoto, Order, Comment, Wishlist
 from .forms import UserRegistrationForm, ProductForm ,UserLoginForm
 from .utils import choiceListGen, timestampFormatter, recDir, recKeys, recAny
 
@@ -33,7 +33,7 @@ class UserModelTest(TestCase):
 
     def test_user_pagination(self):
         for i in range(15):
-            ListingProduct.objects.create(
+            Product.objects.create(
                 title=f'Product {i}',
                 main_image=PhotoModel.objects.create(drive_photo_id=f'drive_photo_{i}'),
                 price=100.0 + i,
@@ -53,7 +53,7 @@ class ListingProductModelTest(TestCase):
 
     def setUp(self):
         self.user = SellsPageUser.objects.create_user(username='seller', password='password')
-        self.product = ListingProduct.objects.create(
+        self.product = Product.objects.create(
             title='Test Product',
             main_image=PhotoModel.objects.create(drive_photo_id='drive_photo_1'),
             price=99.99,
@@ -136,7 +136,7 @@ class ViewTests(TestCase):
         self.client = Client()
         self.user = SellsPageUser.objects.create_user(username='user', password='password')
         self.seller = SellsPageUser.objects.create_user(username='seller', password='password', is_seller=True)
-        self.product = ListingProduct.objects.create(
+        self.product = Product.objects.create(
             title='Test Product',
             main_image=PhotoModel.objects.create(drive_photo_id='drive_photo_1'),
             price=99.99,
@@ -172,7 +172,7 @@ class ViewTests(TestCase):
         }
         response = self.client.post(reverse('add_listing_product'), data=form_data)
         self.assertEqual(response.status_code, 302)
-        product = ListingProduct.objects.get(title='New Product')
+        product = Product.objects.get(title='New Product')
         self.assertRedirects(response, product.get_absolute_url())
 
     def test_profile_view(self):

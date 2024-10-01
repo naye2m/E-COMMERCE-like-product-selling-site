@@ -8,7 +8,7 @@
 
 {% block main %}
 <div class="product-page">
-    <img class="product-image" src="{% static 'sellspage/images/product.png' %}" alt="{{ product.title }} product image">
+    <img class="product-image" src="{{ product.main_image.get_url }}" alt="{{ product.title }} product image">
     
     <div class="product-details">
         <h1 class="product-title">{{ product.title }}</h1>
@@ -29,6 +29,10 @@
             <h2>Description</h2>
             <p>{{ product.description }}</p>
         </div>
+        <div class="description">
+            <h2>Details about products</h2>
+            <p>{{ product.long_description }}</p>
+        </div>
         <div class="price">
             <span class="bold">Price: </span>${{ product.price }}
         </div>
@@ -41,14 +45,14 @@
         
         <div class="actions">
             {% if user.is_authenticated %}
-            <form action="{% url 'sellspage:add_to_cart' product.id %}" method="post" class="add-to-cart-form">
+            {% comment %} todo <form action="{% url 'sellspage:add_to_cart' product.id %}" method="post" class="add-to-cart-form">
                 {% csrf_token %}
                 <button type="submit" class="btn">Add to Cart</button>
-            </form>
-            <form action="{% url 'sellspage:place_order' product.id %}" method="post" class="order-form">
+            </form> {% endcomment %}
+            {% comment %} todo <form action="{% url 'sellspage:place_order' product.id %}" method="post" class="order-form">
                 {% csrf_token %}
                 <button type="submit" class="btn">Order Now</button>
-            </form>
+            </form> {% endcomment %}
             {% else %}
             <p>Please <a href="{% url 'sellspage:login' %}">log in</a> to purchase this product.</p>
             {% endif %}
@@ -90,7 +94,7 @@
             {% for related_product in related_products %}
             <div class="product" data-product-id="{{ related_product.id }}">
                 <a href="{% url 'sellspage:product_detail' related_product.id %}">
-                    <img src="{% static 'sellspage/images/product.png' %}" alt="{{ related_product.title }}">
+                    <img src="{{ product.main_image.get_url }}" alt="{{ related_product.title }}">
                     <div class="p-info">
                         <div class="title">{{ related_product.title }}</div>
                         <div class="price">${{ related_product.price }}</div>

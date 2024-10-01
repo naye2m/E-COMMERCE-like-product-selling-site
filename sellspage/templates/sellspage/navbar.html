@@ -1,0 +1,17 @@
+<!-- templates/sellspage/navbar.html -->
+<nav>
+  <ul>
+    <li><a href="{% url 'sellspage:home' %}">Home</a></li>
+    <li><a href="{% url 'sellspage:listings' %}">Products</a></li>
+    {% if user.is_authenticated %}
+    <li><a href="{% url 'sellspage:add_listing_product' %}">Add product</a></li>
+    <li><a href="{% url 'sellspage:wishlist' %}">Wishlist</a></li>
+    <li><a href="{% url 'sellspage:order' %}">Cart</a></li>
+    <li><a href="{% url 'sellspage:profile' user.username %}">Profile</a></li>
+    <li><a href="{% url 'sellspage:logout' %}">Logout</a></li>
+    {% else %}
+    <li><a href="{% url 'sellspage:register' %}">Register</a></li>
+    <li><a href="{% url 'sellspage:login' %}">Login</a></li>
+    {% endif %}
+  </ul>
+</nav>

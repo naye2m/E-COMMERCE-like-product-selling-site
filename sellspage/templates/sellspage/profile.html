@@ -2,12 +2,7 @@
 {% load static %}   
 
 
-{% block title %}Profile{% endblock title %}
-
-{% block extra_head %}
-<!-- You can add additional head elements specific to this page here -->
-{% endblock extra_head%} 
-
+{% block title %}Profile{% endblock title %} 
 {% block main %}
 <div id="main" class="main" page="profile">
   <div class="profileData">
@@ -36,44 +31,49 @@
       <hr />
     </div>
     <hr />
+    {% if isThisPageUser %}
+    <div class="edit_btn">
+      <a href="./edit"> Edit your profile </a>
+    </div>
+    {% endif %}
     <div class="contracts">
       <a
-        href="https://wa.me/{{ user.profile.whatsapp }}"
-        data-iconof="Whatsapp"
-        class="whatsapp icon"
-        target="_blank"
-        ><span class="name" data-iconof="Whatsapp"></span
-      ></a>
-      <a
-        href="{{ user.profile.imo_link }}"
+      href="https://wa.me/{{ user.whatsapp }}"
+      data-iconof="Whatsapp"
+      class="whatsapp icon"
+      target="_blank"
+      ><span class="name" data-iconof="Whatsapp"></span
+        ></a>
+        <a
+        href="{{ user.imo_link }}"
         data-iconof="Imo"
         class="imo icon whatsapp"
         target="_blank"
         ><span class="name" data-iconof="Imo"></span
       ></a>
       <a
-        href="https://m.me/{{ user.profile.messenger }}"
+        href="https://m.me/{{ user.messenger }}"
         data-iconof="Messenger"
         class="messenger icon message"
         target="_blank"
         ><span class="name" data-iconof="Messenger"></span
       ></a>
       <a
-        href="https://facebook.com/{{ user.profile.facebook }}"
+        href="https://facebook.com/{{ user.facebook }}"
         data-iconof="Facebook"
         class="facebook icon"
         target="_blank"
         ><span class="name" data-iconof="Facebook"></span
       ></a>
       <a
-        href="tel:{{ user.profile.phone }}"
+        href="tel:{{ user.phone }}"
         data-iconof="Phone"
         class="phone icon"
         target="_blank"
         ><span class="name" data-iconof="Phone"></span
       ></a>
       <a
-        href="mailto:{{ user.profile.email }}"
+        href="mailto:{{ user.email }}"
         data-iconof="Email"
         class="email icon"
         target="_blank"
@@ -84,27 +84,35 @@
   </div>
 
   <div class="products">
+    todo canbe used on produts =>{% for item in user.get_page%}{{item}}, {% endfor %}
     <h2 class="heading">Products</h2>
-    {% for product in user.profile.products.all %}
+    {% if isThisPageUser %}
+    <div class="Addprodut">
+      <a href="{% url 'sellspage:add_listing_product' %}"> Add product </a>
+    </div>
+    {% endif %}
+
+    {% for product in user.get_page.products%}
     <div
       class="product"
       data-product-id="{{ product.id }}"
       href="{% url 'sellspage:product_detail' product.id %}"
     >
-      <img
-        class="product-image"
-        src="{{ product.image.url }}"
-        alt="{{ product.title }} product image"
-      />
+      <div class="product-image">
+        <img
+          src="{{ product.image.url }}"
+          alt="{{ product.title }} product image"
+        />
+      </div>
       <div class="p-infos">
         <div class="title">{{ product.title }}</div>
         <div class="price">${{ product.price }}</div>
         <div class="broghtby">{{ product.bought_by_count }} people</div>
       </div>
     </div>
+    {% empty %}
+    <div>No product.</div>
     {% endfor %}
   </div>
-  {% endblock main %} {% block extra_script %}
-  <!-- You can add additional scripts specific to this page here -->
-  {% endblock %}
+  {% endblock main %}
 </div>

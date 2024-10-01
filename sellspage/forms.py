@@ -3,7 +3,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.utils.translation import gettext_lazy as _
-from .models import SellsPageUser, ListingProduct, Contracts, Order, Comment, Wishlist
+from .models import SellsPageUser, Product, Contracts, Order, Comment, Wishlist
+
+from .utils import choiceListGen, productTypes
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'placeholder': 'Email Address'}))
@@ -52,10 +54,12 @@ class ProductForm(forms.ModelForm):
     title = forms.CharField(max_length=50, required=True, widget=forms.TextInput(attrs={'placeholder': 'Title'}))
     description = forms.CharField(max_length=750, required=False, widget=forms.Textarea(attrs={'placeholder': 'Short Description'}))
     long_description = forms.CharField(max_length=1500, required=False, widget=forms.Textarea(attrs={'placeholder': 'Long Description'}))
-    product_type = forms.ChoiceField(choices=ListingProduct._meta.get_field('product_type').choices, required=True)
+    # print(Product._meta.get_field('product_type').choices) # This works
+    product_type = forms.ChoiceField(choices=Product._meta.get_field('product_type').choices, required=True)
+    # product_type = forms.ChoiceField(choices=choiceListGen(productTypes), required=True)
 
     class Meta:
-        model = ListingProduct
+        model = Product
         fields = ['title', 'main_image', 'price', 'description', 'long_description', 'product_type']
 
 class ContractsForm(forms.ModelForm):
@@ -101,4 +105,4 @@ class WishlistForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if user:
-            self.fields['product'].queryset = ListingProduct.objects.exclude(wishlists__user=user)
+            self.fields['product'].queryset = Product.objects.exclude(wishlists__user=user)

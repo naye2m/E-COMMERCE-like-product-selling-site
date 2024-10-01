@@ -20,14 +20,18 @@
       
   </head>
   <body>
-    <nav class="navbar">
+    <div class="navbar" id="navbar">
         <!-- Extend navbar.html here -->
-        {% comment %} todo {% include 'navbar.html' %} {% endcomment %}
-    </nav>
+        {% comment %} todo : {% include 'sellspage/navbar.html' %} {% endcomment %}
+        {% include 'sellspage/navbar.html' %}
+    </div>
     <div id="main" class="main">
         {% block main %}
           <!-- Main content goes here -->
         {% endblock main %}
+        {% block content %}
+          <!-- content content goes here -->
+        {% endblock content %}
     </div>
     {% block extra_script %}
     <!-- This block allows additional scripts in child templates -->

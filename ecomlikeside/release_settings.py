@@ -1,5 +1,5 @@
 DEBUG = False
-ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com', 'IP_address'] #todo imp
+ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com', 'IP_address'] #todo : imp
 import os
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
 DATABASES = {

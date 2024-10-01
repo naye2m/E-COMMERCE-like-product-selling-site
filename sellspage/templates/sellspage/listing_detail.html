@@ -1,0 +1,24 @@
+<!-- templates/sellspage/listing_detail.html -->
+{% extends "sellspage/layout.html" %}
+
+{% block main %}
+<div class="product-detail">
+    <h1>{{ product.title }}</h1>
+    <img src="{{ product.main_image.get_url }}" alt="{{ product.title }}">
+    <p>{{ product.description }}</p>
+    <p>Price: ${{ product.price }}</p>
+    <p>Listed by: <a href="{% url 'profile' product.listed_by.username %}">{{ product.listed_by.username }}</a></p>
+    <p>Profile Type: {{ profile_type }}</p>
+    <p>Available: {{ product.is_available }}</p>
+
+    {% if user.is_authenticated %}
+        {% if liked %}
+            <button>Unlike</button>
+        {% else %}
+            <button>Like</button>
+        {% endif %}
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> to like this product.</p>
+    {% endif %}
+</div>
+{% endblock %}
