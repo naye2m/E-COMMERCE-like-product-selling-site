@@ -89,7 +89,7 @@ img {
 }
 
 
-*{
+* {
 
     border-radius: 10px;
     box-sizing: border-box;
@@ -97,7 +97,7 @@ img {
     padding: 0;
     margin: 0;
     text-align: justify;
-    
+
 }
 
 
@@ -420,6 +420,7 @@ nav {
 
 
 }
+
 /* styles.css */
 
 /* General reset */
@@ -430,14 +431,15 @@ nav {
 }
 
 /* Styling the navigation bar */
-nav{
-    
+nav {
+
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
 
-    background-color: #333; /* Dark background color */
+    background-color: #333;
+    /* Dark background color */
     padding: 10px;
     font-family: Arial, sans-serif;
 }
@@ -445,24 +447,29 @@ nav{
 nav ul {
     list-style-type: none;
     display: flex;
-    justify-content: space-between; /* Spread out the items */
+    justify-content: space-between;
+    /* Spread out the items */
     align-items: center;
 }
 
 nav ul li {
-    margin-right: 0; /* Space between menu items */
+    margin-right: 0;
+    /* Space between menu items */
 }
 
 nav ul li:last-child {
-    margin-right: 0; /* Remove margin for the last item */
+    margin-right: 0;
+    /* Remove margin for the last item */
 }
 
 nav a {
     white-space: nowrap;
     min-width: fit-content;
     background-color: transparent;
-    color: white; /* White text color */
-    text-decoration: none; /* Remove underline */
+    color: white;
+    /* White text color */
+    text-decoration: none;
+    /* Remove underline */
     padding: 8px 15px;
     font-size: 16px;
     transition: background-color 0.3s ease-in-out;
@@ -470,21 +477,27 @@ nav a {
 }
 
 nav a:hover {
-    background-color: #005636; /* Slightly lighter color on hover */
+    background-color: #005636;
+    /* Slightly lighter color on hover */
 }
 
 nav a.active {
-    background-color: #04AA6D; /* Highlight for the active link */
+    background-color: #04AA6D;
+    /* Highlight for the active link */
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
-    nav{
+    nav {
         overflow: hidden;
-        &:hover, &:focus, &:focus-within{
+
+        &:hover,
+        &:focus,
+        &:focus-within {
             overflow: visible;
         }
     }
+
     nav ul {
         flex-direction: column;
         align-items: flex-start;
@@ -496,5 +509,45 @@ nav a.active {
 
     nav ul li:last-child {
         margin-bottom: 0;
+    }
+}
+
+form,
+.form {
+
+    label+input,
+    label+select,
+    label+textarea {
+        display: block;
+        min-width: 100px;
+        max-width: 100%;
+        width: 100%;
+
+        /* background: #000; */
+        &+span.helptext {
+            display: block;
+            font-size: 75%;
+            padding: 0 10px;
+            &::before{
+                content: "hint :";
+                background: #f225;
+                border-radius: 2px;
+            }
+            
+        }
+        
+        
+    }
+    
+    ul>li{
+        font-size: 75%;
+
+    }
+}
+
+.comment{
+    sup{
+        font-size: 40%;
+        font-weight: bolder;
     }
 }

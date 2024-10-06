@@ -30,7 +30,15 @@
             <label for="last_name">Last Name:</label>
             <input type="text" id="last_name" name="last_name" value="{% firstof form.last_name.value '' %}">
             {% if form.last_name.errors %}
-                <div class="error">{{ form.last_name.errors }}</div>
+            <div class="error">{{ form.last_name.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{form.bio}}
+            <label for="bio">Bio:</label>
+            <input type="text" id="bio" name="bio" value="{% firstof form.bio.value '' %}">
+            {% if form.bio.errors %}
+                <div class="error">{{ form.bio.errors }}</div>
             {% endif %}
         </div>
 

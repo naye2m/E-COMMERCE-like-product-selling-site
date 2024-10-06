@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.urls import reverse
 
-from .forms import UserRegistrationForm, ProductForm, UserLoginForm
+from .forms import UserRegistrationForm, ProductForm, UserLoginForm, UserProfileEditForm
 from .models import SellsPageUser, Product, Order, Comment, Wishlist, PhotoModel
 from .utils import filter_dict
 
@@ -37,15 +37,17 @@ def listings_view(request, pageNo=None):
 @login_required
 # def profile_edit_view(request, username):
 def profile_edit_view(request):
+    print(request.user)
     user = get_object_or_404(SellsPageUser, username=request.user.username)
     if request.method == "POST":
-        form = UserRegistrationForm(request.POST, instance=user)
+        # form = UserRegistrationForm(request.POST, instance=user)
+        form = UserProfileEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             messages.success(request, "Profile updated successfully.")
             return redirect("sellspage:profile", username=user.username)
     else:
-        form = UserRegistrationForm(instance=user)
+        form = UserProfileEditForm(instance=user)
     # todo : make a profile edit templete
     return render(request, "sellspage/profile_edit.html", {"form": form, "user": user})
 
@@ -65,6 +67,8 @@ def listing_detail_view(request, id):
     return render(request, "sellspage/product.html", context)
     return render(request, "sellspage/listing_detail.html", context)
 
+def home(request):
+    return redirect("sellspage:self_profile")
 
 def self_profile(request):
     if request.user is None or not request.user.is_authenticated:
@@ -78,7 +82,8 @@ def add_listing_product_view(request):
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
-            product.listed_by = request.user
+            user = get_object_or_404(SellsPageUser, username = request.user.username)
+            product.listed_by = user
             product.save()
             messages.success(request, "Product added successfully.")
             return redirect(reverse("sellspage:profile", args=[request.user.username]))
@@ -132,12 +137,13 @@ def order_view(request):
 
 @login_required
 def add_comment_view(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+    user: SellsPageUser = get_object_or_404(SellsPageUser, pk=request.user.pk)
+    product: Product = get_object_or_404(Product, id=product_id)
     if request.method == "POST":
         comment_text = request.POST.get("comment")
         if comment_text:
             Comment.objects.create(
-                product=product, user=request.user, comment=comment_text
+                product=product, user=user, comment=comment_text
             )
             messages.success(request, "Comment added successfully.")
         else:

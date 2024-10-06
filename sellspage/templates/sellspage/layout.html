@@ -36,5 +36,18 @@
     {% block extra_script %}
     <!-- This block allows additional scripts in child templates -->
     {% endblock extra_script %}
+    <script>
+      // todo : can be add a loader
+      document.body.style.opacity = 0
+      window.addEventListener("load", () => {
+        document.body.style.opacity = 1
+      })
+      {% if messages %}
+        {% for mess in messages %}
+        alert("{{ mess | escapejs }}");
+        {% endfor %}  
+      {% endif %}
+
+  </script>
   </body>
 </html>

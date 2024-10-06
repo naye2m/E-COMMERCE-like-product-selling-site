@@ -48,8 +48,8 @@
             {% comment %} todo <form action="{% url 'sellspage:add_to_cart' product.id %}" method="post" class="add-to-cart-form">
                 {% csrf_token %}
                 <button type="submit" class="btn">Add to Cart</button>
-            </form> {% endcomment %}
-            {% comment %} todo <form action="{% url 'sellspage:place_order' product.id %}" method="post" class="order-form">
+            </form>
+            <form action="{% url 'sellspage:place_order' product.id %}" method="post" class="order-form">
                 {% csrf_token %}
                 <button type="submit" class="btn">Order Now</button>
             </form> {% endcomment %}
@@ -77,12 +77,13 @@
             <input type="text" name="comment" placeholder="Add a comment" required>
             <button type="submit" class="btn">Submit</button>
         </form>
-        <ul class="comment-list">
-            {% for comment in product.comments.all %}
-            <li>
-                <strong>{{ comment.user.username }}:</strong> {{ comment.text }}
+        <ul class="comments">
+            {% for comment in product.comments_default %}
+            <li class="comment">
+                <strong>{{ comment.user__username }}:</strong> {{ comment.comment }} <sup>{{comment.timestamp}}</sup>
             </li>
             {% empty %}
+            
             <li>No comments yet.</li>
             {% endfor %}
         </ul>

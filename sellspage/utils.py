@@ -34,3 +34,8 @@ def choiceListGen(items: list):
 
 def timestampFormatter(timestamp: dt.datetime) -> str:
     return timestamp.strftime("%b %d %Y, %I:%M %p")
+def timeFormatterLocal(timestamp: dt.datetime) -> str:
+    return timestamp.strftime("%d/%m/%Y") # 01/12/2024
+    return timestamp.strftime("%d/%m/%y") # 01/12/24
+def dateFormatterLocal(timestamp: dt.datetime) -> str:
+    return timestamp.strftime("%b %d %Y, %I:%M %p")# 

@@ -33,7 +33,7 @@
     <hr />
     {% if isThisPageUser %}
     <div class="edit_btn">
-      <a href="./edit"> Edit your profile </a>
+      <a href="{% url 'sellspage:profile_edit' %}"> Edit your profile </a>
     </div>
     {% endif %}
     <div class="contracts">
@@ -96,7 +96,7 @@
     <div
       class="product"
       data-product-id="{{ product.id }}"
-      href="{% url 'sellspage:product_detail' product.id %}"
+      onclick="window.location.replace('{% url 'sellspage:product_detail' product.id %}')"
     >
       <div class="product-image">
         <img
@@ -104,7 +104,7 @@
           alt="{{ product.title }} product image"
         />
       </div>
-      <div class="p-infos">
+      <div class="p-infos product-container" >
         <div class="title">{{ product.title }}</div>
         <div class="price">${{ product.price }}</div>
         <div class="broghtby">{{ product.bought_by_count }} people</div>

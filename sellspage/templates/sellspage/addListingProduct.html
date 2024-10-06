@@ -5,64 +5,43 @@
 {% block main %}
 <div id="main" class="main" page="add-listing-product">
   <h2>Add a New Product</h2>
-
-  <form method="POST" enctype="multipart/form-data">
+  <form  method="POST" enctype="multipart/form-data">
+    {% comment %} {{form.as_p}} {% endcomment %}
     {% csrf_token %}
-    <div class="form-group">
-      <label for="title">Product Title</label>
-            <input type="text" id="title" name="title" value="{% firstof form.title.value '' %}" required>
-      <div class="error">{{ form.title.errors }}</div>
-    </div>
+    
 
-    <div class="form-group">
-      <label for="description">Product Description</label>
-            <textarea id="description" name="description" required>{% firstof  form.description.value '' %}</textarea>
-      <div class="error">{{ form.description.errors }}</div>
-    </div>
+      <div class="form-group">
+          <label for="title">Product Title</label>
+              <input type="text" id="title" name="title" value="{% firstof form.title.value '' %}" required>
+        <div class="error">{{ form.title.errors }}</div>
+      </div>
 
-    <div class="form-group">
-      <label for="price">Price (USD)</label>
-            <input type="number" id="price" name="price" step="0.01" value="{% firstof  form.price.value }}" required>
-      <div class="error">{{ form.price.errors }}</div>
-    </div>
+      <div class="form-group">
+        <label for="description">Product Description</label>
+              <textarea id="description" name="description" required>{% firstof  form.description.value '' %}</textarea>
+        <div class="error">{{ form.description.errors }}</div>
+      </div>
 
-    <div class="form-group">
-      <label for="image">Product Image</label>
-            <input type="file" id="image" name="image" {% comment %} todo required {% endcomment %}>
-      <div class="error">{{ form.image.errors }}</div>
-    </div>
+      <div class="form-group">
+        <label for="price">Price (USD)</label>
+              <input type="number" id="price" name="price" step="0.01" value="{% firstof  form.price.value }}" required>
+        <div class="error">{{ form.price.errors }}</div>
+      </div>
 
-    <div class="form-group">
-      <label for="category">Product type</label>
-      {{form.product_type}}
-      <!--
-            <select id="category" name="category" >
-                {% comment %} todo imp : {% for category in form.product_type.field.queryset %}
-                <option value="{% firstof  category.id '' %}" {% if category.id == form.category.value %}selected{% endif %}>
-                    {{ category.name }}
-                </option>
-                {% endfor %}
-            </select>
-            <div class="error">{{ form.category.errors }}</div>
-            <select name="product_type" id="id_product_type">
-                {% for category in form["product_type"].field.queryset %}
-                <option value="{% firstof  category.id '' %}" {% if category.id == form.category.value %}selected{% endif %}>
-                    {{ category.name }}
-                </option>
-                {% endfor %} {% endcomment %}
-                <option value="Others">Others</option>
-              
-                <option value="Fashion">Fashion</option>
-              
-                <option value="Toys">Toys</option>
-              
-                <option value="Electronics">Electronics</option>      
-              
-                <option value="Home">Home</option>
-              
-              </select> -->
-    </div>
+      <div class="form-group">
+        <label for="image">Product Image</label>
+        {{ form.main_image }}
+              {% comment %} <input type="file" id="image" name="image"  required > {% endcomment %}
+        <div class="error">{{ form.image.errors }}</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="category">Product type</label>
+        {{form.product_type}}
+        <div class="error">{{ form.product_type.errors }}</div>
+      </div>
 
+  </div>
     <div class="form-group">
       <button type="submit" class="btn">Add Product</button>
     </div>
