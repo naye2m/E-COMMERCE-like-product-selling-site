@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from os import path
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -81,7 +82,9 @@ WSGI_APPLICATION = "ecomlikeside.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3" if not DEBUG else BASE_DIR / "test_db.sqlite3",
+        "NAME": path.join(BASE_DIR , "db.sqlite3") 
+        if not DEBUG else
+        path.join(BASE_DIR , "test_db.sqlite3"),
     }
 }
 
@@ -125,7 +128,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 STATIC_ROOT = "staticfiles"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = path.join( BASE_DIR , "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
