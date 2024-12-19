@@ -169,4 +169,4 @@ todo.txt
 \test
 db.sqlite3
 sellspage/templates/temp/
-sellspage/templates/temp
+sellspage/templates/temp*
